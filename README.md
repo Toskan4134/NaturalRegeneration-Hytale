@@ -1,101 +1,78 @@
-# 🛠️ Hytale Plugin Template
+# Natural Regeneration
 
-Welcome to the **Hytale Plugin Template**! This project is a pre-configured foundation for building **Java Plugins**. It streamlines the development process by handling classpath setup, server execution, and asset bundling.
+A Hytale server plugin that passively regenerates player health after not taking damage for a configurable period of time.
 
-> **⚠️ Early Access Warning**
-> Hytale is currently in Early Access. Features, APIs, and this template are subject to frequent changes. Please ensure you are using the latest version of the template for the best experience.
+## Features
 
----
+- Automatic health regeneration after a delay period
+- Fully configurable via in-game commands
+- Persistent configuration saved to JSON
+- Optimized for server performance
 
-## 📋 Prerequisites
+## How It Works
 
-Before you begin, ensure your environment is ready:
+1. When a player takes damage, their regeneration timer resets
+2. After the configured delay (default: 10 seconds), health regeneration begins
+3. Health regenerates at the configured rate until the player reaches max health or takes damage again
 
-* **Hytale Launcher**: Installed and updated.
-* **Java 25 SDK**: Required for modern Hytale development.
-* **IntelliJ IDEA**: (Community or Ultimate) Recommended for full feature support.
+## Commands
 
----
+| Command | Description |
+|---------|-------------|
+| `/nr` | Shows help and available subcommands |
+| `/nr status` | Display current configuration |
+| `/nr toggle` | Enable or disable regeneration |
+| `/nr delay <seconds>` | Set delay before regeneration starts |
+| `/nr amount <hp>` | Set HP regenerated per tick |
+| `/nr interval <seconds>` | Set time between regeneration ticks |
 
-## 🚀 Quick Start Installation
+**Aliases:** `/naturalregeneration`, `/naturalregen`, `/nr`
 
-### 1. Initial Setup (Before Importing)
+## Configuration
 
-To avoid IDE caching issues, configure these files **before** you open the project in IntelliJ:
+Configuration is automatically saved to `Server/Plugin/Config/NaturalRegeneration.json`
 
-* **`settings.gradle`**: Set your unique project name.
-```gradle
-rootProject.name = 'MyAwesomePlugin'
+| Option | Default | Description |
+|--------|---------|-------------|
+| `Enabled` | `true` | Whether regeneration is active |
+| `DelaySeconds` | `10.0` | Seconds after damage before regen starts |
+| `AmountHP` | `1.0` | HP restored per regeneration tick |
+| `IntervalSeconds` | `1.0` | Seconds between regeneration ticks |
 
+### Example Configuration
+
+```json
+{
+    "Enabled": true,
+    "DelaySeconds": 10.0,
+    "AmountHP": 1.0,
+    "IntervalSeconds": 1.0
+}
 ```
 
+## Installation
 
-* **`gradle.properties`**: Set your `maven_group` (e.g., `com.yourname`) and starting version.
-* **`src/main/resources/manifest.json`**: Update your plugin metadata.
-* **CRITICAL:** Ensure the `"Main"` property points exactly to your entry-point class.
+1. Build the plugin JAR file
+2. Place the JAR in your server's `plugins` folder
+3. Start/restart the server
+4. Configure using in-game commands or edit the config file
 
+## Building
 
+```bash
+./gradlew build
+```
 
-### 2. Importing the Project
+The compiled JAR will be located in `build/libs/`
 
-1. Open IntelliJ IDEA and select **Open**.
-2. Navigate to the template folder and click **OK**.
-3. Wait for the Gradle sync to finish. This will automatically download dependencies, create a `./run` folder, and generate the **HytaleServer** run configuration.
+## Requirements
 
-### 3. Authenticating your Test Server
+- Hytale Server (compatible version)
 
-You **must** authenticate your local server to connect to it:
+## License
 
-1. Launch the **HytaleServer** configuration in IDEA.
-2. In the terminal, run: `auth login device`.
-3. Follow the printed URL to log in via your Hytale account.
-4. Once verified, run: `auth persistence Encrypted`.
+MIT License
 
----
+## Author
 
-## 🎮 Developing & Testing
-
-### Running the Server
-
-If you do not see the **HytaleServer** run configuration in the top-right dropdown, click "Edit Configurations..." to unhide it. Press the **Green Play Button** to start, or the **Bug Icon** to start in Debug Mode to enable breakpoints.
-
-### Verifying the Setup
-
-1. Launch your standard Hytale Client.
-2. Connect to `Local Server` (127.0.0.1).
-3. Type `/test` in-game. If it returns your plugin version, everything is working!
-
-### Bundling Assets
-
-You can include models and textures by placing them in `src/main/resources/Common/` or `src/main/resources/Server/`. These are editable in real-time using the in-game **Asset Editor**.
-
----
-
-## 📦 Building your Plugin
-
-To create a shareable `.jar` file for distribution:
-
-1. Open the **Gradle Tab** on the right side of IDEA.
-2. Navigate to `Tasks` -> `build` -> `build`.
-3. Your compiled plugin will be in: `build/libs/your-plugin-name-1.0.0.jar`.
-
-To install it manually, drop the JAR into `%appdata%/Hytale/UserData/Mods/`.
-
----
-
-## 📚 Advanced Documentation
-
-For detailed guides on commands, event listeners, and professional patterns, visit our full documentation:
-👉 **[Hytale Modding Documentation](https://britakee-studios.gitbook.io/hytale-modding-documentation)**
-
----
-
-## 🆘 Troubleshooting
-
-* **Sync Fails**: Check that your Project SDK is set to **Java 25** via `File > Project Structure`.
-* **Cannot Connect**: Ensure you ran the `auth` commands in the server console.
-* **Plugin Not Loading**: Double-check your `manifest.json` for typos in the `"Main"` class path.
-
----
-
-**Need Help?** Visit our full guide here: **[Hytale Modding Documentation](https://britakee-studios.gitbook.io/hytale-modding-documentation)**
+Toskan4134
