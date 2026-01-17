@@ -30,7 +30,7 @@ A Hytale server plugin that passively regenerates player health after not taking
 
 ## Configuration
 
-Configuration is automatically saved to `Server/Plugin/Config/NaturalRegeneration.json`
+Configuration is automatically saved to `Server/mods/Toskan4134_NaturalRegeneration/NaturalRegeneration.json`
 
 | Option | Default | Description |
 |--------|---------|-------------|
@@ -53,7 +53,7 @@ Configuration is automatically saved to `Server/Plugin/Config/NaturalRegeneratio
 ## Installation
 
 1. Build the plugin JAR file
-2. Place the JAR in your server's `plugins` folder
+2. Place the JAR in your server's `mods` folder
 3. Start/restart the server
 4. Configure using in-game commands or edit the config file
 
@@ -64,10 +64,6 @@ Configuration is automatically saved to `Server/Plugin/Config/NaturalRegeneratio
 ```
 
 The compiled JAR will be located in `build/libs/`
-
-## Requirements
-
-- Hytale Server (compatible version)
 
 ## License
 
