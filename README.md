@@ -8,6 +8,8 @@ A Hytale server plugin that passively regenerates player health after not taking
 - Fully configurable via in-game commands
 - Persistent configuration saved to JSON
 - Optimized for server performance
+- **Health Cap** - Limit regeneration to a maximum HP value (absolute or percentage)
+- **Update Checker** - Automatically checks GitHub and CurseForge for new versions on startup and every 12 hours, notifies operators when they join
 
 ## How It Works
 
@@ -25,6 +27,7 @@ A Hytale server plugin that passively regenerates player health after not taking
 | `/nr delay <seconds>` | Set delay before regeneration starts |
 | `/nr amount <hp>` | Set HP regenerated per tick |
 | `/nr interval <seconds>` | Set time between regeneration ticks |
+| `/nr healthcap <value>` | Set health cap (`80` for absolute, `80%` for percentage, `none` to disable) |
 
 **Aliases:** `/naturalregeneration`, `/naturalregen`, `/nr`
 
@@ -38,6 +41,8 @@ Configuration is automatically saved to `Server/mods/Toskan4134_NaturalRegenerat
 | `DelaySeconds` | `10.0` | Seconds after damage before regen starts |
 | `AmountHP` | `1.0` | HP restored per regeneration tick |
 | `IntervalSeconds` | `1.0` | Seconds between regeneration ticks |
+| `HealthCap` | `""` | Max HP to regenerate to (`"80"` for absolute, `"80%"` for percentage, `""` for no cap) |
+| `CheckForUpdates` | `true` | Whether to check for plugin updates |
 
 ### Example Configuration
 
@@ -46,9 +51,25 @@ Configuration is automatically saved to `Server/mods/Toskan4134_NaturalRegenerat
     "Enabled": true,
     "DelaySeconds": 10.0,
     "AmountHP": 1.0,
-    "IntervalSeconds": 1.0
+    "IntervalSeconds": 1.0,
+    "HealthCap": "80%",
+    "CheckForUpdates": true
 }
 ```
+
+### Health Cap Examples
+
+- `"80"` - Won't heal above 80 HP (absolute value)
+- `"80%"` - Won't heal above 80% of max HP (percentage)
+- `""` - No cap, heal to full health (default)
+
+### Update Checker
+
+The plugin automatically checks for updates from GitHub and CurseForge:
+- Checks on server startup
+- Checks every 12 hours while the server is running
+- Logs to console when a new version is available
+- Notifies operators (players with `*` permission) when they join
 
 ## Installation
 

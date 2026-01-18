@@ -8,6 +8,8 @@ Un mod para servidores Hytale que regenera pasivamente la salud del jugador desp
 - Totalmente configurable mediante comandos del juego.
 - Configuración persistente guardada en JSON.
 - Optimizado para el rendimiento del servidor.
+- **Límite de Salud** - Limita la regeneración a un valor máximo de HP (absoluto o porcentaje)
+- **Verificador de Actualizaciones** - Comprueba automáticamente GitHub y CurseForge en busca de nuevas versiones al iniciar y cada 12 horas, notifica a los operadores cuando se conectan
 
 ## Cómo funciona
 
@@ -25,6 +27,7 @@ Un mod para servidores Hytale que regenera pasivamente la salud del jugador desp
 | `/nr delay <segundos>` | Establece el retraso antes de que comience la regeneración |
 | `/nr amount <hp>` | Establece los puntos de salud regenerados por tick |
 | `/nr interval <segundos>` | Establece el tiempo entre ticks de regeneración |
+| `/nr healthcap <valor>` | Establece el límite de salud (`80` absoluto, `80%` porcentaje, `none` para desactivar) |
 
 **Alias:** `/naturalregeneration`, `/naturalregen`, `/nr`
 
@@ -38,6 +41,8 @@ La configuración se guarda automáticamente en `Server/mods/Toskan4134_NaturalR
 | `DelaySeconds` | `10.0` | Segundos tras el daño antes de que comience la regeneración |
 | `AmountHP` |  `1.0` | HP restaurados por cada tick de regeneración |
 | `IntervalSeconds` | `1.0` | Segundos entre ticks de regeneración |
+| `HealthCap` | `""` | HP máximo a regenerar (`"80"` absoluto, `"80%"` porcentaje, `""` sin límite) |
+| `CheckForUpdates` | `true` | Si se comprueba actualizaciones del plugin |
 
 ### Ejemplo de configuración
 
@@ -46,9 +51,25 @@ La configuración se guarda automáticamente en `Server/mods/Toskan4134_NaturalR
     "Enabled": true,
     "DelaySeconds": 10.0,
     "AmountHP": 1.0,
-    "IntervalSeconds": 1.0
+    "IntervalSeconds": 1.0,
+    "HealthCap": "80%",
+    "CheckForUpdates": true
 }
 ```
+
+### Ejemplos de Límite de Salud
+
+- `"80"` - No curará por encima de 80 HP (valor absoluto)
+- `"80%"` - No curará por encima del 80% del HP máximo (porcentaje)
+- `""` - Sin límite, cura hasta la salud máxima (predeterminado)
+
+### Verificador de Actualizaciones
+
+El plugin comprueba automáticamente actualizaciones desde GitHub y CurseForge:
+- Comprueba al iniciar el servidor
+- Comprueba cada 12 horas mientras el servidor está en ejecución
+- Registra en la consola cuando hay una nueva versión disponible
+- Notifica a los operadores (jugadores con permiso `*`) cuando se conectan
 
 ## Instalación
 
