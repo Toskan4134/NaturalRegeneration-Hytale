@@ -102,8 +102,13 @@ public class RegenerationTickSystem extends EntityTickingSystem<EntityStore> {
         float currentHealth = healthValue.get();
         float maxHealth = healthValue.getMax();
 
-        // If already at max health, do nothing
-        if (currentHealth >= maxHealth) {
+        // Calculate effective health cap
+        float healthCap = cfg.getEffectiveHealthCap(maxHealth);
+        // Cap cannot exceed max health
+        float effectiveCap = Math.min(healthCap, maxHealth);
+
+        // If already at or above the effective cap, do nothing
+        if (currentHealth >= effectiveCap) {
             return;
         }
 
@@ -112,11 +117,23 @@ public class RegenerationTickSystem extends EntityTickingSystem<EntityStore> {
             return;
         }
 
-        // Apply regeneration
+        // Calculate regeneration amount, capping at the effective cap
         float regenAmount = cfg.getAmountHP();
+        float newHealth = currentHealth + regenAmount;
+        if (newHealth > effectiveCap) {
+            regenAmount = effectiveCap - currentHealth;
+        }
+
+        // Only regenerate if there's actually something to heal
+        if (regenAmount <= 0) {
+            return;
+        }
+
+        // Apply regeneration
         statMap.addStatValue(cachedHealthIndex, regenAmount);
 
         LOGGER.atFine().log("Regenerating " + regenAmount + " HP to player " + entityIndex +
-                " (" + healthValue.get() + "/" + maxHealth + ")");
+                " (" + healthValue.get() + "/" + maxHealth + ")" +
+                (cfg.hasHealthCap() ? " [cap: " + cfg.getHealthCap() + "]" : ""));
     }
 }

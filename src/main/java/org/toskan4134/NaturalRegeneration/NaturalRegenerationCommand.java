@@ -34,6 +34,7 @@ public class NaturalRegenerationCommand extends AbstractCommandCollection {
         this.addSubCommand(new DelayCommand(config));
         this.addSubCommand(new AmountCommand(config));
         this.addSubCommand(new IntervalCommand(config));
+        this.addSubCommand(new HealthCapCommand(config));
     }
 
     // Status subcommand - shows current configuration
@@ -53,7 +54,8 @@ public class NaturalRegenerationCommand extends AbstractCommandCollection {
             msg.append("Status: ").append(cfg.isEnabled() ? "ENABLED" : "DISABLED").append("\n");
             msg.append("Delay: ").append(cfg.getDelaySeconds()).append(" sec\n");
             msg.append("Amount: ").append(cfg.getAmountHP()).append(" HP\n");
-            msg.append("Interval: ").append(cfg.getIntervalSeconds()).append(" sec");
+            msg.append("Interval: ").append(cfg.getIntervalSeconds()).append(" sec\n");
+            msg.append("Health Cap: ").append(cfg.hasHealthCap() ? cfg.getHealthCap() : "None").append(" HP");
             ctx.sendMessage(Message.raw(msg.toString()));
         }
     }
@@ -138,6 +140,46 @@ public class NaturalRegenerationCommand extends AbstractCommandCollection {
                 config.get().setIntervalSeconds(seconds);
                 config.save();
                 ctx.sendMessage(Message.raw("Interval set to " + seconds + " seconds"));
+            }
+        }
+    }
+
+    // Health Cap subcommand
+    private static class HealthCapCommand extends CommandBase {
+        private final Config<RegenConfig> config;
+        private final RequiredArg<String> capArg;
+
+        public HealthCapCommand(Config<RegenConfig> config) {
+            super("healthcap", "Set health cap (e.g., '80' for absolute or '80%' for percentage, 'none' to disable)");
+            this.config = config;
+            this.capArg = this.withRequiredArg("cap", "Health cap value (number, percentage, or 'none')", ArgTypes.STRING);
+        }
+
+        @Override
+        protected void executeSync(@Nonnull CommandContext ctx) {
+            String cap = ctx.get(capArg);
+            if (cap != null) {
+                if (cap.equalsIgnoreCase("none") || cap.equalsIgnoreCase("off") || cap.equals("0")) {
+                    config.get().setHealthCap("");
+                    config.save();
+                    ctx.sendMessage(Message.raw("Health cap disabled"));
+                } else {
+                    // Validate the format
+                    String testValue = cap.endsWith("%") ? cap.substring(0, cap.length() - 1) : cap;
+                    try {
+                        float value = Float.parseFloat(testValue);
+                        if (value <= 0) {
+                            ctx.sendMessage(Message.raw("Health cap must be a positive value"));
+                            return;
+                        }
+                        config.get().setHealthCap(cap);
+                        config.save();
+                        ctx.sendMessage(Message.raw("Health cap set to " + cap +
+                                (cap.endsWith("%") ? " (percentage of max health)" : " HP")));
+                    } catch (NumberFormatException e) {
+                        ctx.sendMessage(Message.raw("Invalid format. Use a number (e.g., '80') or percentage (e.g., '80%')"));
+                    }
+                }
             }
         }
     }
