@@ -25,8 +25,9 @@ public class NaturalRegenerationCommand extends AbstractCommandCollection {
 
     public NaturalRegenerationCommand(Config<RegenConfig> config) {
         super("naturalregeneration", "Configure the Natural Regeneration plugin");
-        this.setPermissionGroup(GameMode.Adventure);
+        // this.setPermissionGroup(GameMode.Adventure);
         this.addAliases("naturalregen", "nr");
+        this.requirePermission("naturalregeneration");
 
         // Add subcommands
         this.addSubCommand(new StatusCommand(config));

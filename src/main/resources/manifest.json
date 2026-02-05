@@ -1,7 +1,7 @@
 {
     "Group": "Toskan4134",
     "Name": "NaturalRegeneration",
-    "Version": "1.1.0",
+    "Version": "1.1.1",
     "Description": "Regenerates health passively after not taking damage for a while",
     "Authors": [
         {
